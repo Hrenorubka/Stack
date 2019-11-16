@@ -12,8 +12,10 @@ bool zad1(string s)
 	{
 		if ((s[i] == '(') || (s[i] == '{') || (s[i] == '['))
 			brackets.push(s[i]);
-		else if ((s[i] == ')') && (brackets.top() == '(') || (s[i] == '}') && (brackets.top() == '{') || (s[i] == ']') && (brackets.top() == '['))
+		else if  ((!brackets.empty()) && (s[i] == ')') && (brackets.top() == '(') || (s[i] == '}') && (brackets.top() == '{') || (s[i] == ']') && (brackets.top() == '['))
+		{
 			brackets.pop();
+		}
 		else if ((s[i] == ')') || (s[i] == '}') || (s[i] == ']'))
 			return false;
 		i++;
@@ -23,12 +25,10 @@ bool zad1(string s)
 	return false;
 }
 
-void main()
+void main(int argc, char *argv[])
 {
-	cout << "Input string for first task: \n";
-	string s;
-	cin >> s;
+	
+	string s = argv[1];
 	cout << zad1(s) << '\n';
-	while (true);
 }
 
