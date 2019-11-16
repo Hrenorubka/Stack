@@ -53,7 +53,8 @@ TEST(Stack, not_full_stack_is_full)
 TEST(Stack, can_get_size)
 {
 	Stack<int> s(3);
-	EXPECT_EQ(3, s.size());
+	s.push(1);
+	EXPECT_EQ(1, s.size());
 }
 
 TEST(Stack, can_allocate_mem_for_biger_stack)
@@ -62,12 +63,13 @@ TEST(Stack, can_allocate_mem_for_biger_stack)
 	for (int i = 0; i < 9; i++)
 		s.push(1);
 	s.push(1);
-	EXPECT_EQ(13, s.size());
+	std::cout << s.size() << "\n";
+	EXPECT_EQ(10, s.size());
 }
 
 TEST(Stack, can_get_top_elem)
 {
-	Stack<int> s(2);
+	Stack<int> s(5);
 	s.push(3);
 	EXPECT_EQ(3, s.top());
 }

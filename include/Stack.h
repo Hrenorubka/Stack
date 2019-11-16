@@ -4,8 +4,6 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
-
 template <class ValType>
 class Stack
 {
@@ -13,26 +11,25 @@ private:
 	ValType *stack;
 	ValType *elem;
 	int len_stack;
-	int index_elem;
 	void res_mem()
 	{
-		ValType *obl = new ValType[len_stack];
-		for (int i = 0; i < len_stack; i++)
-			obl[i] = stack[i];
+		int dif = elem - stack;
 		len_stack = len_stack + len_stack / 3 + 1;
-		delete[] stack;
-		stack = new ValType[len_stack];
-		for (int i = 0; i <= index_elem; i++)
+		ValType *obl = new ValType[len_stack];
+		for (int i = 0; i <= elem - stack; i++)
 		{
-			stack[i] = obl[i];
+			obl[i] = stack[i];
 		}
+		delete[] stack;
+		stack = obl;
+		elem = stack + dif;
 	}
 public:
 	Stack()
 	{
 		len_stack = 9;
 		stack = new ValType[len_stack];
-		index_elem = -1;
+		elem = NULL;
 	}
 	Stack(int len)
 	{
@@ -40,34 +37,39 @@ public:
 			throw 1;
 		len_stack = len;
 		stack = new ValType[len_stack];
-		index_elem = -1;
+		elem = NULL;
 	}
 	Stack(const Stack &s)
 	{
 		len_stack = s.len_stack;
 		stack = new ValType[len_stack];
-		index_elem = s.index_elem;
-		for (int i = 0; i <= index_elem; i++)
+		elem = stack + (s.elem - s.stack);
+		for (int i = 0; i <= elem - stack; i++)
 		{
 			stack[i] = s.stack[i];
 		}
-		elem = &stack[index_elem];
+	}
+	~Stack()
+	{
+		delete[] stack;
 	}
 	bool empty()
 	{
-		return (index_elem < 0);
+		return (elem - stack < 0);
 	}
 	bool full()
 	{
-		return (index_elem + 1 == len_stack);
+		return (elem - stack + 1 == len_stack);
 	}
 	int size()
 	{
-		return len_stack;
+		if (elem == NULL)
+			return 0;
+		return elem - stack + 1;
 	}
 	ValType top()
 	{
-		if (index_elem < 0)
+		if (elem - stack < 0)
 			throw 1;
 		return *elem;
 	}
@@ -75,7 +77,6 @@ public:
 	{
 		if (empty())
 			throw 1;
-		index_elem--;
 		elem--;
 	}
 	void push(ValType inp)
@@ -84,35 +85,18 @@ public:
 		{
 			res_mem();
 		}
-		index_elem++;
-		if (index_elem == 0)
+		if (elem == NULL)
 		{
 			stack[0] = inp;
 			elem = &stack[0];
 		}
 		else
+		{
 			elem++;
-		*elem = inp;
+			*elem = inp;
+		}
 		
 	}
 };
-
-bool zad1(string s)
-{
-	Stack <char> brackets;
-	int i = 0;
-	while (i < s.length())
-	{
-		if ((s[i] == '(') || (s[i] == '{') || (s[i] == '['))
-			brackets.push(s[i]);
-		else if ((s[i] == ')') && (brackets.top() == '(') || (s[i] == '}') && (brackets.top() == '{') || (s[i] == ']') && (brackets.top() == '['))
-			brackets.pop();
-		else if ((s[i] == ')') || (s[i] == '}') || (s[i] == ']'))
-			return false;
-		i++;
-	}
-	if (brackets.empty())
-		return true;
-	return false;
-}
+bool zad1(std::string s);
 #endif
